@@ -39,8 +39,9 @@ async def start(message: Message, state: FSMContext) -> None:
     text = f"Hi {message.from_user.first_name}! Choose a game to play:\n"
 
     for index, game in enumerate(GAMES_TO_PLAY, 1):
-        text += f"{index}. {game.name()}\n{game.description()}\n\n"
-        keyboard.append(KeyboardButton(text=game.name(),))
+        name = await game.name()
+        text += f"{index}. {name}\n{await game.description()}\n\n"
+        keyboard.append(KeyboardButton(text=name,))
 
     await message.answer(
         text,
@@ -57,32 +58,36 @@ async def choose_game(message: Message, state: FSMContext) -> None:
     
     selected_game = None
     for game in GAMES_TO_PLAY:
-        if game.name() == game_name:
+        if await game.name() == game_name:
             selected_game = game
             break
     
     if not selected_game:
+        game_buttons = []
+        for game in GAMES_TO_PLAY:
+            game_buttons.append(KeyboardButton(text=await game.name()))
+        
         await message.answer(
             "Invalid game selection. Please choose from the list.",
             reply_markup=ReplyKeyboardMarkup(
-                keyboard=[[KeyboardButton(text=game.name()) for game in GAMES_TO_PLAY]],
+                keyboard=[game_buttons],
                 one_time_keyboard=True,
                 resize_keyboard=True,
             ),
         )
         return
     
-    game_state = selected_game.initial_state()
+    game_state = await selected_game.initial_state()
     await state.update_data(game=selected_game, game_state=game_state)
     await state.set_state(Form.play_game)
     
-    state_text = selected_game.format_state(game_state)
-    legal_moves = selected_game.get_legal_moves(game_state)
+    state_text = await selected_game.format_state(game_state)
+    legal_moves = await selected_game.get_legal_moves(game_state)
     
     keyboard = [[KeyboardButton(text=str(move))] for move in legal_moves]
     
     await message.answer(
-        f"Let's play {selected_game.name()}!\n\n{state_text}\n\nYour move:",
+        f"Let's play {await selected_game.name()}!\n\n{state_text}\n\nYour move:",
         reply_markup=ReplyKeyboardMarkup(
             keyboard=keyboard,
             one_time_keyboard=True,
@@ -98,9 +103,9 @@ async def play_game(message: Message, state: FSMContext) -> None:
     game_state = data["game_state"]
 
     move_str = message.text.strip()
-    parsed_move = game.parse_move(move_str)
+    parsed_move = await game.parse_move(move_str)
     
-    legal_moves = game.get_legal_moves(game_state)
+    legal_moves = await game.get_legal_moves(game_state)
     keyboard = [[KeyboardButton(text=str(move))] for move in legal_moves]
     
     if parsed_move is None:
@@ -125,26 +130,26 @@ async def play_game(message: Message, state: FSMContext) -> None:
         )
         return
     
-    game_state = game.add_move(game_state, parsed_move)
+    game_state = await game.add_move(game_state, parsed_move)
     
-    if game.is_terminal(game_state):
+    if await game.is_terminal(game_state):
         await state.update_data(game_state=game_state)
         await send_game_over(message, state, game, game_state)
         return
     
-    bot_move = game.generate_best_move(game_state)
-    game_state = game.add_move(game_state, bot_move)
+    bot_move = await game.generate_best_move(game_state)
+    game_state = await game.add_move(game_state, bot_move)
     
     await state.update_data(game_state=game_state)
     
-    state_text = game.format_state(game_state)
+    state_text = await game.format_state(game_state)
     
-    if game.is_terminal(game_state):
+    if await game.is_terminal(game_state):
         await message.answer(f"Bot played: {bot_move}\n\n{state_text}")
         await send_game_over(message, state, game, game_state)
         return
     
-    legal_moves = game.get_legal_moves(game_state)
+    legal_moves = await game.get_legal_moves(game_state)
     keyboard = [[KeyboardButton(text=str(move))] for move in legal_moves]
     
     await message.answer(
@@ -158,7 +163,7 @@ async def play_game(message: Message, state: FSMContext) -> None:
 
 
 async def send_game_over(message: Message, state: FSMContext, game: Game, game_state: Any) -> None:
-    winner = game.get_winner(game_state)
+    winner = await game.get_winner(game_state)
     
     if winner == 1:
         result_text = "You won!"
