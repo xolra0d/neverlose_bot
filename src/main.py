@@ -17,8 +17,11 @@ from aiogram.types import (
 )
 
 from games.game import Game
+from games.tictactoe import TicTacToe
 
-GAMES_TO_PLAY: list[Game] = []
+GAMES_TO_PLAY: list[Game] = [
+    TicTacToe(),
+]
 
 TOKEN = getenv("TOKEN")
 bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
