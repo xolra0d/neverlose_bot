@@ -82,7 +82,7 @@ class TicTacToe(Game):
     @override
     async def description(self) -> str:
         """Returns description of the game"""
-        return "A clasic notebook game. Players take turn placing Xs and Os. First player to place 3 in a line wins."
+        return "A classic notebook game. Players take turns placing Xs and Os. First to place 3 in a line wins."
 
     @override
     async def initial_state(self) -> TicTacToeState:
