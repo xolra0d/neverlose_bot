@@ -171,7 +171,7 @@ async def send_game_over(message: Message, state: FSMContext, game: Game, game_s
     if winner == 1:
         result_text = "You won!"
     elif winner == -1:
-        result_text = "You lost, kill yourself!"
+        result_text = "You lost."
     else:
         result_text = "It's a draw."
     
