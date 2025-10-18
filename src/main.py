@@ -18,12 +18,14 @@ from aiogram.types import (
 
 from games.game import Game
 from games.tictactoe import TicTacToe
+from games.nim import Nim
 
 GAMES_TO_PLAY: list[Game] = [
     TicTacToe(),
+    Nim(),
 ]
 
-TOKEN = getenv("TOKEN")
+TOKEN = "7459308004:AAFbRlhd0eVQDiF3SdtWOMwlMSU9I20Wn64"
 bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 dp = Dispatcher()
 
