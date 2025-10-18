@@ -18,9 +18,11 @@ from aiogram.types import (
 
 from games.game import Game
 from games.tictactoe import TicTacToe
+from games.nim import Nim
 
 GAMES_TO_PLAY: list[Game] = [
     TicTacToe(),
+    Nim(),
 ]
 
 TOKEN = getenv("TOKEN")
