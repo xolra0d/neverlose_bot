@@ -2,6 +2,8 @@
 
 A Telegram bot designed to play various games where the bot never loses.
 
+You may check it out: http://t.me/neverlose_game_bot
+
 ## Requirements
 
 - Python 3.13+
