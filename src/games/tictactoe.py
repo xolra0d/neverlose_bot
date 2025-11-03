@@ -96,11 +96,9 @@ class XO(Enum):
     str(XO) is human-printable but may contain multibyte unicode characters.
     """
 
-    # X represents a cross. This is opposite of a circle.
-    X = 1
+    X = 1  # X represents a cross. This is the opposite of a circle.
 
-    # O represents a circle. This is opposite of a cross.
-    O = 2
+    O = 2  # O represents a circle. This is the opposite of a cross.
 
     # __str__ provides a human readable representation of an XO.
     # This representation is used when printing the game board.
@@ -116,14 +114,14 @@ class XO(Enum):
 
     # __repr__ provides an ASCII human readable representation for an XO.
     # It is guaranteed to return string consisting only of ASCII runes
-    # or unicode codepoints less then 128.
+    # or unicode codepoints less than 128.
     # Returns X for a cross, O for a circle and ? in other cases.
     @override  # Mark that a virtual method is overridden.
     def __repr__(self) -> str:
         if self == XO.X:  # Check if receiver is a cross.
             return "X"  # Return an uppercase x.
         elif self == XO.O:  # Check if receiver is a circle.
-            return "O"  # Return an uppercase o, not be confused with 0.
+            return "O"  # Return an uppercase o, not to be confused with 0.
         else:  # Receiver is not a cross and is not a circle.
             return "?"  # Return a placeholder codepoint.
 
@@ -140,7 +138,7 @@ class Draw:
     """
 
 
-# TypeField is an type alias for a field.
+# TypeField is a type alias for a field.
 # It consists of a 9-tuple that is homogeneous.
 # Each element is of type XO | None.
 # Value of XO.X represents that X (cross) is placed in the cell.
@@ -296,7 +294,7 @@ class TicTacToe(Game):
         ), "tictactoe: invariant failed: move overrides occupied cell"
 
         # Copy the state.
-        # Tuple are immutable so a list has to be used.
+        # Tuples are immutable so a list has to be used.
         field = list(state.field)
 
         field[move] = state.turn  # Make the move.
@@ -364,9 +362,9 @@ class TicTacToe(Game):
             # Here, a pseudo-random value is generated based on the current state.
             # It does not have to be cryptographically secure or even unpredictable,
             # so the built-in hash will do.
-            # Hash may truncate to system word with. To keep things portable to 32 bit,
+            # Hash may truncate to system word width. To keep things portable to 32 bit,
             # we truncate it ourselves.
-            # 2 bytes is more then enough for our use case, given that len(options) is at most 9.
+            # 2 bytes is more than enough for our use case, given that len(options) is at most 9.
             # Expression of the form A % B yields a value in interval [0; B-1]
             # (for non-negative integers A and B)
             # Because of this, options[idx] will never access out of bounds.
@@ -435,7 +433,7 @@ class TicTacToe(Game):
         """
         _check_state_invariants(state)  # Check that provided state is valid.
 
-        # The following list comprehension is a little turse.
+        # The following list comprehension is a little terse.
         # But basically it collects each row into a string
         # and then joins the strings into a multiline string.
 
@@ -500,10 +498,10 @@ class TicTacToe(Game):
 
 
 def _check_state_invariants(state: TicTacToeState) -> None:
-    """ "
+    """
     _check_state_invariants verifies basic properties of the provided state.
     Raises an exception if anything is wrong.
-    Not that this function does not verify whether state is reachable in normal gameplay.
+    Note that this function does not verify whether state is reachable in normal gameplay.
     It only tries to offset dynamic nature of python.
     This function assumes that all instances of XO class are valid.
     Time complexity: O(1).
