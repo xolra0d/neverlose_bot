@@ -300,7 +300,7 @@ class TicTacToe(Game):
         field[move] = state.turn  # Make the move.
 
         return TicTacToeState(
-            # Static anylizers may miss that tuple(field) is of type TypeField,
+            # Static analyzers may miss that tuple(field) is of type TypeField,
             # so an explicit cast is required.
             field=cast(TypeField, tuple(field)),
             # Flip the turn. This makes player alternate.
