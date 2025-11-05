@@ -52,7 +52,7 @@ It utilizes several external libraries and internal modules:
 
         a. `sys.stdout` to display information the stdout channel
 
-    4. `os` - Miscellaneous operating system interfaces.
+    4. `os` - Portable operating system interfaces.
         Specifically used to retrieve the bot TOKEN from environment variable,
         for not hardcodding the token.
         Link: https://docs.python.org/3/library/os.html
@@ -109,9 +109,6 @@ Global Constants:
     - TOKEN: Telegram bot authentication token from environment variable
     - bot: Bot instance configured with HTML parse mode
     - dp: Dispatcher instance for handling updates
-
-Expected time complexity for handlers: O(1) to O(n) depending on game implementation
-Expected space complexity: O(1) as game state is stored in FSM context
 """
 
 import asyncio
@@ -159,7 +156,7 @@ if TOKEN is None:
 # Initialize Bot instance with authentication token.
 # DefaultBotProperties configures the bot's default behavior:
 #   - parse_mode=ParseMode.HTML: Allows HTML formatting in messages.
-# read more aboyt it: https://core.telegram.org/bots/api#formatting-options
+# read more about it: https://core.telegram.org/bots/api#formatting-options
 bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 
 # Initialize Dispatcher to handle incoming updates from Telegram.
@@ -194,7 +191,6 @@ async def start(message: Message, state: FSMContext):
     Returns:
         None.
     Expected time complexity: O(n) where n is number of games in GAMES_TO_PLAY
-    Expected space complexity: O(n) for keyboard and text construction
     """
     # Initiate state in choose_game state.
     await state.set_state(Form.choose_game)
@@ -249,7 +245,6 @@ async def choose_game(message: Message, state: FSMContext):
     Returns:
         None.
     Expected time complexity: O(n) where n is number of games
-    Expected space complexity: O(m) where m is number of legal moves
     """
     # Get game name from user's message.
     game_name = message.text
@@ -344,7 +339,6 @@ async def play_game(message: Message, state: FSMContext):
     Returns:
         None.
     Expected time complexity: O(n) where n depends on game move generation
-    Expected space complexity: O(m) where m is number of legal moves
     """
     # Retrieve data from FSM context.
     data = await state.get_data()
@@ -454,7 +448,6 @@ async def send_game_over(message: Message, state: FSMContext, game: Game, game_s
     Returns:
         None.
     Expected time complexity: O(n) for start() function
-    Expected space complexity: O(n) for start() function
     """
     # Determine who won the game.
     winner = await game.get_winner(game_state)

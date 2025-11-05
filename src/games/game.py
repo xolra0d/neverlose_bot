@@ -27,7 +27,7 @@
 
 
 """
-Module `src/games/game.py` provides abstract interface implementation.
+Module `src/games/game.py` provides interface implementation.
 ---
 It utilizes two external libraries, specifically:
 
@@ -65,17 +65,13 @@ It utilizes two external libraries, specifically:
         Link: https://docs.python.org/3/library/typing.html
 
         Used types in this file are:
-            a. `tp.Any` - any input type, as each game will have their own type of field, move, etc.
-            b. `tp.Optional[your_type]` - type alias for `None | your_type`, which signifies possibility of having None (NULL) value. 
-
-P.S. Unfortunately, it does not enforce checking if the value is None or not, which could lead to major mistakes.
+            a. `tp.Any`
+            b. `tp.Optional[T]`
 ---
 `Game` class main purpose is to act like an adaptor pattern between main Telegram bot logic described in
 `src/main.py` and games described in `src/games/`. Game is complete, when it implements all interface (`Game`) methods.
 
 By default each method inside an interface is asynchronous, to be async-compatible, if it is used in one of the game implementations.
-
-If a game, which implements `Game` could be non-deterministic, it should have DETERMINISTIC global flag set to `False` by default.
 
 Typical usage example (GameNameState and Move should be implemented by the game):
 ```
@@ -135,6 +131,7 @@ class Game(ABC):
     Base abstract class for each game to inherit.
     Game implementation is complete, when all `@abstractmethod` methods are implemented.
     """
+
     @abstractmethod # Mark method as required to implement.
     async def name(self) -> str:
         """
@@ -149,8 +146,6 @@ and contains profanity (in english language), please explain in PR.
 
         Returns:
             str: game name in a string format.
-        Expected time complexity: O(1)
-        Expected space complexity: O(1)
         """
         pass
 
@@ -167,8 +162,6 @@ and contains profanity (in english language), please explain in PR.
 
         Returns:
             str: game description in a string format.
-        Expected time complexity: O(1)
-        Expected space complexity: O(1)
         """
         pass
 
@@ -181,8 +174,6 @@ and contains profanity (in english language), please explain in PR.
 
         Returns:
             tp.Any: game initial state.
-        Expected time complexity: O(1)
-        Expected space complexity: O(1)
         """
         pass
 
@@ -199,8 +190,6 @@ and contains profanity (in english language), please explain in PR.
 
         Returns:
             list[tp.Any]: list of all legal moves.
-        Expected time complexity: Game specific. Most probably O(n)
-        Expected space complexity: O(n)
         """
         pass
 
@@ -219,8 +208,6 @@ and contains profanity (in english language), please explain in PR.
 
         Returns:
             tp.Any: new state with added move.
-        Expected time complexity: O(1)
-        Expected space complexity: O(1)
         """
         pass
 
@@ -236,9 +223,7 @@ and contains profanity (in english language), please explain in PR.
             state: current state of the game.
 
         Returns:
-            tp.Any: best move generated. If `DETERMINISTIC` flag exists, it should use it to consider the best move.
-        Expected time complexity: Game specific. Most probably O(n)
-        Expected space complexity: O(1)
+            tp.Any: best move generated.
         """
         pass
 
@@ -257,8 +242,6 @@ and contains profanity (in english language), please explain in PR.
 
         Returns:
             bool: boolean value of current state status.
-        Expected time complexity: Game specific. Most probably O(n)
-        Expected space complexity: O(1)
         """
         pass
 
@@ -280,8 +263,6 @@ and contains profanity (in english language), please explain in PR.
                 3. Return 0, if it is draw.
                 4. Return None, if state is not terminal.
 
-        Expected time complexity: Game specific. Most probably O(1)
-        Expected space complexity: O(1)
         """
         pass
 
@@ -297,8 +278,6 @@ and contains profanity (in english language), please explain in PR.
 
         Returns:
             str: state formatted as a string for user.
-        Expected time complexity: O(1)
-        Expected space complexity: O(1)
         """
         pass
 
@@ -315,8 +294,6 @@ and contains profanity (in english language), please explain in PR.
 
         Returns:
             tp.Optional[tp.Any]: move type. Could be None, if move is invalid.
-        Expected time complexity: O(1)
-        Expected space complexity: O(1)
         """
         pass
  
