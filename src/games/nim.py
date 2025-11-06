@@ -1,28 +1,29 @@
 """
-                 公共许可证
-         版权所有© 除作者外他妈的所有人
+               GLWT(Good Luck With That) Public License
+                 Copyright (c) Everyone, except Author
 
-任何人都被允许复制、分发、修改、合并、销售、出版、再授权
-或其他任何行为，但后果自负
+Everyone is permitted to copy, distribute, modify, merge, sell, publish,
+sublicense or whatever they want with this software but at their OWN RISK.
+
+                            Preamble
+
+The author has absolutely no clue what the code in this project does.
+It might just work or not, there is no third option.
 
 
-                    前言
+                GOOD LUCK WITH THAT PUBLIC LICENSE
+   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION, AND MODIFICATION
 
-作者完全不知道这个项目的代码到底他妈的做了什么。
-代码处于可用或不可用状态，没有第三种可能。
+  0. You just DO WHATEVER YOU WANT TO as long as you NEVER LEAVE A
+TRACE TO TRACK THE AUTHOR of the original product to blame for or hold
+responsible.
 
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
 
-           祝你好运公共许可证
-      复制、分发和修改的条款与条件
-
-  0. 只要你永远别他妈留下任何能追踪到原作者的线索，
-你他妈想做什么就做什么，不能因此责怪原作者或追究
-原作者的责任。
-
-在任何情况下，作者均不对因使用或与本软件有关的合同诉讼、
-侵权或其他方式产生的任何索赔、损害或其他责任负责。
-
-你他妈自求多福吧。
+Good luck and Godspeed.
 """
 
 from __future__ import annotations
