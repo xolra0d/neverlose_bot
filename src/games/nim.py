@@ -32,7 +32,7 @@ Module src/games/nim.py implements the Nim game logic for the Telegram bot.
 
 Overview:
 
-This module uses an asynchronous, object-oriented design to implement all of the Nim game mechanics. 
+This module uses an asynchronous, object-oriented design to implement an optimally-playing Nim game bot. 
 It operates using the `Game` interface.
 
 Nim is a mathematical game where players take turns removing objects from piles. 
@@ -51,16 +51,16 @@ Dependencies:
     - Import @dataclass(frozen=True) for defining immutable game classes.
 
     `random`
-    - Import random for moves when optimal move cannot be found.
+    - Import random, in case of adding a loss functionality to the bot.
 
     `games.game.Game`
-    - Import base class which provide common structure for all games.
+    - Import base class, which provides common structure for all games.
 
     `typing_extensions.override`
     - Import `@override` decorator for marking overridden methods.
 
 
-Architectural idea:
+Architectural design:
 
     `Move` dataclass:
     Represents a single move: removing a given number of stones from a specific pile.
@@ -107,6 +107,7 @@ class Move:
 @dataclass(frozen=True)
 class NimState:
     piles: Tuple[int, ...]
+    bot_turn: bool 
 
 
     def remove_stones(self, pile: int, remove: int) -> NimState:
@@ -122,7 +123,6 @@ class NimState:
 
         Returns:
             NimState: New immutable state with updated pile sizes.
-
         """
         if not (0 <= pile < len(self.piles)):
             raise ValueError("Invalid pile index")
@@ -132,7 +132,7 @@ class NimState:
         # Convert tuple -> list -> modify -> tuple again
         new_piles = list(self.piles)
         new_piles[pile] -= remove
-        return NimState(tuple(new_piles))
+        return NimState(tuple(new_piles), not self.bot_turn)
 
 
 # Main Nim game logic implementing the abstract Game interface.
@@ -141,6 +141,7 @@ class Nim(Game):
         # Total number of piles in the game.
         self.piles_size = 4
 
+    # @override is used to explicitly indicate that a method in a subclass is intended to override a method from its parent class.
 
     # Returns official game name.
     @override
@@ -160,7 +161,7 @@ class Nim(Game):
     @override
     async def initial_state(self) -> NimState:
         """Return the initial configuration of piles."""
-        return NimState((1, 3, 5, 7))
+        return NimState((1, 3, 5, 7), bot_turn=False)
 
 
     # Generates all legal moves from a given state.
@@ -178,12 +179,16 @@ class Nim(Game):
         Example:
             For piles (1, 3, 5, 7), returns 1+3+5+7 = 16 total moves.
         """
+        # Create all legal moves for the current game state
         moves: List[Move] = []
+        
+        # Loop over each pile in the current state
         for i, count in enumerate(state.piles):
+            # For each pile, generate moves removing 1 up to all stones in that pile
             for remove in range(1, count + 1):
-                moves.append(Move(i, remove))
-        return moves
+                moves.append(Move(i, remove))  # Add each possible move to the list
 
+        return moves  # Return the complete list of legal moves
 
     # Parse a string input into a Move object.
     @override
@@ -197,11 +202,16 @@ class Nim(Game):
             Move if valid, None otherwise.
         """
         try:
+            # Remove leading whitespace and split the input string by spaces
             parts = move_str.strip().split()
+            # Check input
             if len(parts) != 2:
                 return None
 
+            # Convert the two parts to integers
             pile, remove = int(parts[0]), int(parts[1])
+            
+            # Check that the pile index is valid and at least 1 stone is removed
             if 0 <= pile < self.piles_size and remove > 0:
                 return Move(pile, remove)
         except ValueError:
@@ -242,7 +252,7 @@ class Nim(Game):
             if target < pile:
                 return Move(i, pile - target)
 
-        # random move
+        # Return random move
         return random.choice(await self.get_legal_moves(state))
 
 
@@ -266,7 +276,7 @@ class Nim(Game):
         """
         if not await self.is_terminal(state):
             return None
-        return -1  # Last move (bot) wins
+        return 1 if state.bot_turn else -1 # Last move (bot) wins
 
 
     # Format game state into readable string with stone symbols.
