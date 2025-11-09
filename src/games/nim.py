@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
                GLWT(Good Luck With That) Public License
                  Copyright (c) Everyone, except Author
@@ -78,8 +79,6 @@ Gameplay Summary:
     3. The player making the last move wins.
     4. Bot uses **Nim-sum (XOR strategy)** for optimal moves.
 """
-
-from __future__ import annotations
 from typing import List, Optional, Tuple
 from dataclasses import dataclass
 import random
