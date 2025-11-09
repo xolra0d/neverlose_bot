@@ -51,9 +51,6 @@ Dependencies:
     `dataclasses`
     - Import @dataclass(frozen=True) for defining immutable game classes.
 
-    `random`
-    - Import random, in case of adding a loss functionality to the bot.
-
     `games.game.Game`
     - Import base class, which provides common structure for all games.
 
@@ -81,7 +78,6 @@ Gameplay Summary:
 """
 from typing import List, Optional, Tuple
 from dataclasses import dataclass
-import random
 from .game import Game
 from typing_extensions import override
 
@@ -234,26 +230,17 @@ class Nim(Game):
 
         Algorithm:
             - Compute XOR of all pile sizes.
-            - If result == 0 -> losing position -> choose random move.
-            - Otherwise -> find a pile that can be reduced to make Nim-sum = 0.
+            - Find a pile that can be reduced to make Nim-sum = 0.
         """
         nim_sum = 0
         for pile in state.piles:
             nim_sum ^= pile  # XOR of all piles
 
-        # If nim_sum == 0, no winning move -> pick random move
-        if nim_sum == 0:
-            return random.choice(await self.get_legal_moves(state))
-
-        # Otherwise, find move to force nim_sum to 0
+        # Find move to force nim_sum to 0
         for i, pile in enumerate(state.piles):
             target = pile ^ nim_sum
             if target < pile:
                 return Move(i, pile - target)
-
-        # Return random move
-        return random.choice(await self.get_legal_moves(state))
-
 
     # Check if game reached terminal (end) state.
     @override
